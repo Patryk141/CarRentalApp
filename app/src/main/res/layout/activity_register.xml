@@ -35,6 +35,8 @@
             android:layout_marginHorizontal="25dp"
             android:layout_marginTop="13dp"
             android:hint="Full Name"
+            app:errorEnabled="true"
+            app:errorIconDrawable="@drawable/baseline_error_outline_24"
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,6 +83,8 @@
             app:counterMaxLength="9"
             app:endIconMode="clear_text"
             app:helperText="Required"
+            app:errorEnabled="true"
+            app:errorIconDrawable="@drawable/baseline_error_outline_24"
             app:helperTextTextColor="@color/design_default_color_error"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -104,6 +108,8 @@
             android:layout_marginHorizontal="25dp"
             android:layout_marginTop="13dp"
             android:hint="Password"
+            app:errorEnabled="true"
+            app:errorIconDrawable="@drawable/baseline_error_outline_24"
             app:helperTextTextColor="@color/design_default_color_error"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -132,7 +138,8 @@
         app:layout_constraintTop_toBottomOf="@+id/registrationForm"
         app:layout_constraintVertical_bias="0.2" />
 
-    <Button
+
+        <Button
         android:id="@+id/btnAccAlready"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
