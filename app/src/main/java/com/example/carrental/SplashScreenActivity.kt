@@ -23,7 +23,8 @@ class SplashScreenActivity : AppCompatActivity() {
 
     CoroutineScope(Dispatchers.Main).launch {// wykonanie kodu na wątku głównym
       delay(splashTimeout)
-      val intent = Intent(this@SplashScreenActivity, RegisterActivity::class.java)
+//      val intent = Intent(this@SplashScreenActivity, RegisterActivity::class.java)
+      val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
       startActivity(intent)
       finish()
     }
