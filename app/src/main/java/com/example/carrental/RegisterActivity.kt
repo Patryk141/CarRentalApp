@@ -97,6 +97,7 @@ class RegisterActivity : AppCompatActivity() {
   fun onRegister(view: View) {
     progressBar.visibility = View.VISIBLE
     var validInputs = validateInputs()
+    if(!validInputs) progressBar.visibility = View.GONE
     var email = editTextEmail.text.toString()
     var password = editTextPassword.text.toString()
 
