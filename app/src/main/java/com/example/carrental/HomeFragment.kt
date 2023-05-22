@@ -2,22 +2,17 @@ package com.example.carrental
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class HomeFragment : Fragment() {
+class HomeFragment(val imageUrls : ArrayList<String>) : Fragment() {
     private val categories: MutableList<String> = ArrayList()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -27,8 +22,9 @@ class HomeFragment : Fragment() {
         recyclerViewCategory.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
         recyclerViewCategory.adapter = CategoryAdapter(generateCategory())
         val recyclerViewCar = view.findViewById<RecyclerView>(R.id.recyclerView2)
-        recyclerViewCar.layoutManager = GridLayoutManager(activity,  2)
-        recyclerViewCar.adapter = CarAdapter(generateCategory(), generateCategory(), activity as Context)
+        val recyclerViewAdapter = CarAdapter(generateCategory(), generateCategory(), imageUrls, activity as Context)
+        recyclerViewCar.layoutManager = GridLayoutManager(activity, 2)
+        recyclerViewCar.adapter = recyclerViewAdapter
     }
 
     private fun generateCategory(): MutableList<String> {

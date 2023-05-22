@@ -106,10 +106,10 @@ class LoginActivity : AppCompatActivity() {
   }
 
   fun onLogin(view: View) {
-    progressBar.visibility = View.VISIBLE
+//    progressBar.visibility = View.VISIBLE
     val email = editTextEmail.text.toString()
     val password = editTextPassword.text.toString()
-    val passwordRepeat = editTextPasswordRepeat.text
+    val passwordRepeat = editTextPasswordRepeat.text.toString()
 
 
     if(!password.equals(passwordRepeat) || password == null || passwordRepeat == null) {
@@ -119,11 +119,13 @@ class LoginActivity : AppCompatActivity() {
 
     auth.signInWithEmailAndPassword(email, password)
       .addOnCompleteListener(this) { task ->
-        progressBar.visibility = View.GONE
+//        progressBar.visibility = View.GONE
         if (task.isSuccessful) {
           // Sign in success, update UI with the signed-in user's information
           val user = auth.currentUser
           Toast.makeText(this, "User signed in successfully", Toast.LENGTH_SHORT).show()
+          val intent = Intent(this@LoginActivity, MainActivity::class.java)
+          startActivity(intent)
           // new intent to home screen activity
         } else {
           // If sign in fails, display a message to the user.

@@ -7,11 +7,15 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
-class CarAdapter(private var name: List<String>, private var price: List<String>, private var context: Context) : RecyclerView.Adapter<CarAdapter.ViewHolder>() {
+class CarAdapter(private var name: List<String>, private var price: List<String>, private val urls: List<String>, private var context: Context) : RecyclerView.Adapter<CarAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var textViewModel : TextView = view.findViewById<TextView>(R.id.model)
         var textViewPrice : TextView = view.findViewById<TextView>(R.id.price)
@@ -24,11 +28,13 @@ class CarAdapter(private var name: List<String>, private var price: List<String>
     }
 
     override fun getItemCount(): Int {
-        return name.size
+        return urls.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.image.setImageResource(R.drawable.audi)
+        val url = urls[position]
+        Glide.with(holder.itemView).load(url).into(holder.image)
+//        holder.image.setImageResource(R.drawable.audi)
         holder.image.setOnClickListener {
             val intent = Intent(context, CarDetailsActivity::class.java)
 
@@ -38,4 +44,6 @@ class CarAdapter(private var name: List<String>, private var price: List<String>
             context.startActivity(intent, activityOptions.toBundle())
         }
     }
+
+
 }
