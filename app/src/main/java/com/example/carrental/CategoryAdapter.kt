@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class CategoryAdapter(private var categories: List<String>) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+class CategoryAdapter(private var categories: List<String>, private val listener: CategoryInterface) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
     private val viewHolder : MutableList<ViewHolder> = ArrayList()
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var textView : TextView = view.findViewById<TextView>(R.id.textView2)
@@ -26,10 +26,13 @@ class CategoryAdapter(private var categories: List<String>) : RecyclerView.Adapt
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.textView.text = categories[position]
         holder.textView.setOnClickListener {
-            for (i in categories.indices){
+            listener.categoryClick(categories[position])
+            for (i in viewHolder.indices){
                 viewHolder[i].textView.setTextColor(Color.BLACK)
+                viewHolder[i].textView.setBackgroundResource(R.drawable.category_background1)
             }
-            holder.textView.setTextColor(Color.RED)
+            holder.textView.setTextColor(Color.WHITE)
+            holder.textView.setBackgroundResource(R.drawable.category_background2)
         }
     }
 }
