@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -19,14 +20,22 @@ class SplashScreenActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_splash_screen)
 
+    val fAuth = FirebaseAuthSingleton.getInstance()
+    fAuth.signOut()
     appNameTxt = findViewById<TextView>(R.id.appName);
 
     CoroutineScope(Dispatchers.Main).launch {// wykonanie kodu na wątku głównym
       delay(splashTimeout)
-//      val intent = Intent(this@SplashScreenActivity, RegisterActivity::class.java)
-      val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
-      startActivity(intent)
-      finish()
+      if(fAuth.currentUser == null) {
+        val intent = Intent(this@SplashScreenActivity, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+      }
+      else {
+        val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+      }
     }
 
     val myAnimation = AnimationUtils.loadAnimation(this, R.anim.splash_screen_anim_1)

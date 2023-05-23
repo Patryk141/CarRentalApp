@@ -12,6 +12,8 @@ import androidx.core.widget.doOnTextChanged
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -34,7 +36,7 @@ class RegisterActivity : AppCompatActivity() {
     super.onStart()
     // Check if user is signed in (non-null) and update UI accordingly.
     auth.signOut()
-    val currentUser = auth.currentUser
+    val currentUser = FirebaseAuthSingleton.getInstance().currentUser
     if (currentUser != null) {
       Toast.makeText(this, "You are already logged in", Toast.LENGTH_SHORT).show()
     }
@@ -72,8 +74,8 @@ class RegisterActivity : AppCompatActivity() {
     val password = editTextPassword.text
     val phoneNum = editTextPhone.text
 
-    if(password == null || password.length < 4) {
-      textInputLayPassword.error = "Invalid password(min 4 sybmols)"
+    if(password == null || password.length < 6) {
+      textInputLayPassword.error = "Invalid password(min 6 sybmols)"
       areInputsValid = false
     }
 
@@ -98,23 +100,36 @@ class RegisterActivity : AppCompatActivity() {
     progressBar.visibility = View.VISIBLE
     var validInputs = validateInputs()
     if(!validInputs) progressBar.visibility = View.GONE
+
+    var userName = editTextName.text.toString()
     var email = editTextEmail.text.toString()
     var password = editTextPassword.text.toString()
-
-    println(email)
-    println(password)
+    var phoneNum = editTextPhone.text.toString()
 
     if(validInputs) {
       // Code to register the user in Firebase
       auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener(this) { task ->
           progressBar.visibility = View.GONE
-          println(task)
           if (task.isSuccessful) {
             // Sign in success, update UI with the signed-in user's information
-//            val user = auth.currentUser
-            Toast.makeText(this, "Registered", Toast.LENGTH_SHORT).show()
-            moveToLoginPage()
+            var user = auth.currentUser
+
+//            user!!.updatePhoneNumber(phoneNum) - to do (phoneNum verification)
+            user!!.updateEmail(email).addOnCompleteListener { emailTask ->
+              if(emailTask.isSuccessful) {
+                val profileUpdates = UserProfileChangeRequest.Builder()
+                  .setDisplayName(userName)
+                  .build()
+                user!!.updateProfile(profileUpdates)
+                  .addOnCompleteListener{ profileTask ->
+                    if(profileTask.isSuccessful) {
+                      Toast.makeText(this, "Registered", Toast.LENGTH_SHORT).show()
+                      moveToLoginPage()
+                    }
+                  }
+              }
+            }
           } else {
             // If sign in fails, display a message to the user.
             Toast.makeText(
@@ -131,6 +146,7 @@ class RegisterActivity : AppCompatActivity() {
 
   private fun moveToLoginPage() {
     val intent = Intent(this, LoginActivity::class.java)
+    intent.putExtra("registered", "login after registration")
     startActivity(intent)
     finish()
   }

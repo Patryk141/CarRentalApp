@@ -10,7 +10,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import com.google.android.gms.auth.api.identity.Identity
+import androidx.lifecycle.LifecycleOwner
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -31,17 +31,25 @@ class LoginActivity : AppCompatActivity() {
   private lateinit var progressBar : ProgressBar
   private lateinit var auth: FirebaseAuth
   private lateinit var googleSignInClient : GoogleSignInClient
+  private lateinit var googleSignInManager : GoogleSignInManager
   private lateinit var googleSignInLauncher : ActivityResultLauncher<Intent>
 
   public override fun onStart() {
     super.onStart()
     // Check if user is signed in (non-null) and update UI accordingly.
-    auth.signOut()
-    val currentUser = auth.currentUser
-    if (currentUser != null) {
-      Toast.makeText(this, "You are already logged in", Toast.LENGTH_SHORT).show()
+//    auth.signOut()
+    var currentUser = FirebaseAuthSingleton.getInstance().currentUser
+    val msg = intent.getStringExtra("register")
+    if(msg == "login after registration") {
+      currentUser = null
     }
 
+    else if (currentUser != null) {
+      Toast.makeText(this, "You are already logged in", Toast.LENGTH_SHORT).show()
+      val intent = Intent(this, MainActivity::class.java)
+      startActivity(intent)
+      finish()
+    }
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,28 +58,17 @@ class LoginActivity : AppCompatActivity() {
 
     loginBtn = findViewById(R.id.loginBtn)
     loginWithGoogleBtn = findViewById(R.id.sign_in_button)
+    progressBar = findViewById(R.id.progressBar)
 
-    auth = FirebaseAuth.getInstance()
+    auth = FirebaseAuthSingleton.getInstance()
+    val activityResultRegistry = this@LoginActivity.activityResultRegistry
 
-    val gso = GoogleSignInOptions.Builder(
-      GoogleSignInOptions.DEFAULT_SIGN_IN)
-      .requestIdToken(getString(R.string.default_web_client_id))
-      .requestEmail()
-      .build()
-
-    googleSignInClient = GoogleSignIn.getClient(this, gso)
-
-    googleSignInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        result ->
-      if(result.resultCode == Activity.RESULT_OK) {
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        handleResult(task)
-      }
-    }
+    googleSignInManager = GoogleSignInManager(this, auth, activityResultRegistry)
 
     loginWithGoogleBtn.setOnClickListener {
-      val signInIntent = googleSignInClient.signInIntent
-      googleSignInLauncher.launch(signInIntent)
+//      val signInIntent = googleSignInClient.signInIntent
+//      googleSignInLauncher.launch(signInIntent)
+      googleSignInManager.signInWithGoogle()
     }
 
     editTextEmail = findViewById(R.id.editTextEmail)
@@ -79,61 +76,56 @@ class LoginActivity : AppCompatActivity() {
     editTextPasswordRepeat = findViewById(R.id.editTextPasswordRepeat)
   }
 
-  private fun handleResult(task: Task<GoogleSignInAccount>) {
-    if(task.isSuccessful) {
-      val account : GoogleSignInAccount? = task.result
-      if(account != null) {
-        updateUI(account)
-      }
-    } else {
-      Toast.makeText(this, task.exception.toString(), Toast.LENGTH_SHORT).show()
+  private fun validateInputs(email: String, password: String, passwordRepeat: String) : Boolean {
+    if(!email.contains("@") || password.length < 4 || passwordRepeat.length < 4) {
+      Toast.makeText(this, "Invalid data", Toast.LENGTH_SHORT).show()
+      return false
     }
-  }
+    if(!password.equals(passwordRepeat) || password == null || passwordRepeat == null) {
+      Toast.makeText(this, "Problem with log in", Toast.LENGTH_SHORT).show()
+      return false
+    }
 
-  private fun updateUI(account: GoogleSignInAccount) {
-    val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-    auth.signInWithCredential(credential).addOnCompleteListener {
-      if(it.isSuccessful) {
-        val intent : Intent = Intent(this, HomeActivity::class.java) //
-        intent.putExtra("email", account.email)
-        intent.putExtra("name", account.displayName)
-        intent.putExtra("photo", account.photoUrl)
-        startActivity(intent)
-      } else {
-        Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
-      }
-    }
+    return true
   }
 
   fun onLogin(view: View) {
     progressBar.visibility = View.VISIBLE
     val email = editTextEmail.text.toString()
     val password = editTextPassword.text.toString()
-    val passwordRepeat = editTextPasswordRepeat.text
+    val passwordRepeat = editTextPasswordRepeat.text.toString()
+    val result = validateInputs(email, password, passwordRepeat)
 
-
-    if(!password.equals(passwordRepeat) || password == null || passwordRepeat == null) {
-      Toast.makeText(this, "Problem with log in", Toast.LENGTH_SHORT).show()
-      return
-    }
-
-    auth.signInWithEmailAndPassword(email, password)
-      .addOnCompleteListener(this) { task ->
-        progressBar.visibility = View.GONE
-        if (task.isSuccessful) {
-          // Sign in success, update UI with the signed-in user's information
-          val user = auth.currentUser
-          Toast.makeText(this, "User signed in successfully", Toast.LENGTH_SHORT).show()
-          // new intent to home screen activity
-        } else {
-          // If sign in fails, display a message to the user.
-          Toast.makeText(
-            baseContext,
-            "Authentication failed.",
-            Toast.LENGTH_SHORT,
-          ).show()
+    if (!result) {
+      progressBar.visibility = View.GONE
+    } else {
+      auth.signInWithEmailAndPassword(email, password)
+        .addOnCompleteListener(this) { task ->
+          progressBar.visibility = View.GONE
+          if (task.isSuccessful) {
+            // Sign in success, update UI with the signed-in user's information
+            val user = auth.currentUser
+            Toast.makeText(this, "User signed in successfully", Toast.LENGTH_SHORT).show()
+            // new intent to home activity
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+          } else {
+            // If sign in fails, display a message to the user.
+            Toast.makeText(
+              baseContext,
+              "Authentication failed.",
+              Toast.LENGTH_SHORT,
+            ).show()
+          }
         }
-      }
+    }
   }
+
+  fun launchRegister(view: View) {
+    val intent = Intent(this, RegisterActivity::class.java)
+    startActivity(intent)
+    finish()
+  }
+
 
 }
