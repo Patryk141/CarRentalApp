@@ -28,7 +28,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        replaceFragment(HomeFragment())
+        val imageUrls : ArrayList<String> = intent.extras?.getStringArrayList("1234") as ArrayList<String>
+        Log.e("", imageUrls[0])
+        replaceFragment(HomeFragment(imageUrls))
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         val currentUser = FirebaseAuthSingleton.getInstance().currentUser
@@ -72,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
-                    replaceFragment(HomeFragment())
+                    replaceFragment(HomeFragment(imageUrls))
                     return@setOnItemSelectedListener true
                 }
                 R.id.favorite -> {
