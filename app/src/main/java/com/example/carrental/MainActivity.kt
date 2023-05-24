@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.app
 import com.google.firebase.storage.FirebaseStorage
@@ -25,12 +26,29 @@ class MainActivity : AppCompatActivity() {
 
     private var carsList : List<Car> = emptyList()
     private lateinit var db : FirebaseFirestore
+    private lateinit var imagePaths : MutableList<String>
+    private lateinit var carsListData: List<CarData?>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val imageUrls : ArrayList<String> = intent.extras?.getStringArrayList("1234") as ArrayList<String>
-        Log.e("", imageUrls[0])
-        replaceFragment(HomeFragment(imageUrls))
+        db = Firebase.firestore
+
+        GlobalScope.launch(Dispatchers.IO) {
+            db.collection("carsData")
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    carsListData = querySnapshot.documents.map { documentSnapshot ->
+                        var carData = documentSnapshot.toObject(CarData::class.java)
+                        carData
+                    }
+                    replaceFragment(HomeFragment(carsListData))
+                }
+                .addOnFailureListener { e ->
+                    // Obsługa błędu
+                    Log.e(TAG, "Error getting cars data: ", e)
+                }
+        }
+
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         val currentUser = FirebaseAuthSingleton.getInstance().currentUser
@@ -38,12 +56,10 @@ class MainActivity : AppCompatActivity() {
         val photoUrl: Uri? = currentUser.photoUrl
         val userName: String? = currentUser.displayName
 
-        db = Firebase.firestore
         val storageRef = FirebaseStorage.getInstance().reference.child("images/")
-
         storageRef.listAll()
             .addOnSuccessListener { listResult ->
-                val imagePaths = mutableListOf<String>()
+                imagePaths = mutableListOf<String>()
 
                 for (item in listResult.items) {
                     val path = item.path
@@ -55,9 +71,8 @@ class MainActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 Log.e(TAG, "Błąd pobierania listy elementów z Firebase Storage", exception)
             }
-//
+
 //        val apiClient = CarApiClient().create()
-////        val call = apiClient.getCarsData(1, "yes", 2020)
 //        GlobalScope.launch(Dispatchers.IO) {
 //            val response = apiClient.getCarsData(1, "yes", 2020).awaitResponse()
 //            if(response.isSuccessful) {
@@ -68,13 +83,12 @@ class MainActivity : AppCompatActivity() {
 //            } else {
 //                // Obsłużenie błędów
 //            }
-////            val call = apiClient.getCarsData(1, "yes", 2020)
 //        }
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
-                    replaceFragment(HomeFragment(imageUrls))
+                    replaceFragment(HomeFragment(carsListData))
                     return@setOnItemSelectedListener true
                 }
                 R.id.favorite -> {
@@ -91,19 +105,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun insertCarData() {
+        val categoryList = arrayListOf<String>()
+        categoryList.add("ALL")
+        categoryList.add("SPORT")
+        categoryList.add("CITY")
+        categoryList.add("PREMIUM")
+        categoryList.add("OFF ROAD")
+
         carsList.forEach {car ->
             val cost = Random.nextInt(100, 1000)
+            val category = categoryList[Random.nextInt(0, categoryList.size)]
+            val randomImgPath = imagePaths[Random.nextInt(0, imagePaths.size)]
+
+            val collectionRef = db.collection("carsData")
+            val documentRef = collectionRef.document()
+
             val carData = hashMapOf(
-                "id" to car.id,
+                "id" to documentRef.id,
+                "category" to category,
                 "brand" to car.make.name,
                 "model" to car.name,
+                "url" to randomImgPath,
                 "cost" to cost,
             )
+
             // Add a new document with a generated ID
-            db.collection("carsData")
-                .add(carData)
+            documentRef
+                .set(carData)
                 .addOnSuccessListener { documentReference ->
-                    Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                    Log.d(TAG, "DocumentSnapshot added with ID: ${car.id}")
                 }
                 .addOnFailureListener { e ->
                     Log.w(TAG, "Error adding document", e)
