@@ -17,9 +17,7 @@ import kotlinx.coroutines.tasks.await
 class SplashScreenActivity : AppCompatActivity() {
 
   lateinit var appNameTxt : TextView
-//  private val splashTimeout = 1750L
-
-  private val imageRef = Firebase.storage.reference
+  private val splashTimeout = 1750L
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -30,18 +28,8 @@ class SplashScreenActivity : AppCompatActivity() {
     appNameTxt = findViewById<TextView>(R.id.appName);
 
     CoroutineScope(Dispatchers.Main).launch {// wykonanie kodu na wątku głównym
-//      delay(splashTimeout)
-      val imageUrls = ArrayList<String>()
-      val images = imageRef.child("images/").listAll().await()
-      for (image in images.items) {
-        val url = image.downloadUrl.await()
-        imageUrls.add(url.toString())
-      }
-//      val intent = Intent(this@SplashScreenActivity, RegisterActivity::class.java)
-//      val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
+      delay(splashTimeout)
 //      intent.putExtra("1234", imageUrls)
-//      startActivity(intent)
-//      finish()
       if(fAuth.currentUser == null) {
         val intent = Intent(this@SplashScreenActivity, LoginActivity::class.java)
         startActivity(intent)
@@ -49,7 +37,6 @@ class SplashScreenActivity : AppCompatActivity() {
       }
       else {
         val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
-        intent.putExtra("1234", imageUrls)
         startActivity(intent)
         finish()
       }

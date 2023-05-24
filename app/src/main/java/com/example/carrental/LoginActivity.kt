@@ -37,24 +37,24 @@ class LoginActivity : AppCompatActivity() {
   public override fun onStart() {
     super.onStart()
     // Check if user is signed in (non-null) and update UI accordingly.
-//    auth.signOut()
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_login)
+
     var currentUser = FirebaseAuthSingleton.getInstance().currentUser
     val msg = intent.getStringExtra("register")
+
     if(msg == "login after registration") {
       currentUser = null
     }
-
     else if (currentUser != null) {
       Toast.makeText(this, "You are already logged in", Toast.LENGTH_SHORT).show()
       val intent = Intent(this, MainActivity::class.java)
       startActivity(intent)
       finish()
     }
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_login)
 
     loginBtn = findViewById(R.id.loginBtn)
     loginWithGoogleBtn = findViewById(R.id.sign_in_button)
