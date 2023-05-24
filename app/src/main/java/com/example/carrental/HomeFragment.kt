@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class HomeFragment(val imageUrls : ArrayList<String>) : Fragment() {
+class HomeFragment(var carsListData : List<CarData?>) : Fragment() {
+
     private val categories: MutableList<String> = ArrayList()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -22,7 +23,7 @@ class HomeFragment(val imageUrls : ArrayList<String>) : Fragment() {
         recyclerViewCategory.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
         recyclerViewCategory.adapter = CategoryAdapter(generateCategory())
         val recyclerViewCar = view.findViewById<RecyclerView>(R.id.recyclerView2)
-        val recyclerViewAdapter = CarAdapter(generateCategory(), generateCategory(), imageUrls, activity as Context)
+        val recyclerViewAdapter = CarAdapter(generateCategory(), generateCategory(), carsListData, activity as Context)
         recyclerViewCar.layoutManager = GridLayoutManager(activity, 2)
         recyclerViewCar.adapter = recyclerViewAdapter
     }
