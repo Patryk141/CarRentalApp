@@ -1,5 +1,7 @@
 package com.example.carrental
 
+import java.lang.reflect.Constructor
+
 data class CarResponse(
   val collection: CollectionInfo,
   val data: List<Car>
@@ -27,3 +29,15 @@ data class Make(
   val id: Int,
   val name: String
 )
+
+data class CarData(
+  var id: String = "",
+  var brand: String = "",
+  var category: String = "",
+  var cost: Int = 0,
+  var model : String = "",
+  var url : String = ""
+) {
+  // Konstruktor bezargumentowy
+  constructor() : this("", "", "", 0, "", "")
+}
