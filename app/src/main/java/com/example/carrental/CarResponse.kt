@@ -30,6 +30,13 @@ data class Make(
   val name: String
 )
 
+data class FavoriteCar(
+  val userID: String,
+  val cars: ArrayList<String>
+) {
+  constructor() : this("", ArrayList<String>())
+}
+
 data class CarData(
   var id: String = "",
   var brand: String = "",

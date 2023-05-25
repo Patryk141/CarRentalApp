@@ -64,7 +64,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.05" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.example.carrental.GridRecyclerView
             android:id="@+id/recyclerView2"
             android:layout_width="0dp"
             android:layout_height="0dp"

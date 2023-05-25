@@ -151,5 +151,4 @@ class RegisterActivity : AppCompatActivity() {
     finish()
   }
 
-
 }

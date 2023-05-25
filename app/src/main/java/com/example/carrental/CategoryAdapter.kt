@@ -25,6 +25,10 @@ class CategoryAdapter(private var categories: List<String>, private val listener
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.textView.text = categories[position]
+        if (categories[position] == "ALL") {
+            holder.textView.setTextColor(Color.WHITE)
+            holder.textView.setBackgroundResource(R.drawable.category_background2)
+        }
         holder.textView.setOnClickListener {
             listener.categoryClick(categories[position])
             for (i in viewHolder.indices){

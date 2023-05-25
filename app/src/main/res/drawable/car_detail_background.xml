@@ -4,7 +4,7 @@
 
 
     <solid
-        android:color = "@color/darkGray"
+        android:color = "@color/gray"
         android:width="2dp"/>
     <corners
         android:topLeftRadius="15dp"
