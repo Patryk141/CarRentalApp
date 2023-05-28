@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.google.android.gms.permission.READ_GSERVICES" />
 
-
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,7 +15,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.CarRental"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".Activities.PaymentsActivity"
+            android:exported="false" />
         <activity
             android:name=".Activities.CartActivity"
             android:exported="false" />
@@ -42,11 +46,11 @@
         </activity>
 
         <meta-data
-            android:name="com.google.android.gms.wallet.api.enabled"
-            android:value="true" />
-        <meta-data
             android:name="com.stripe.publishable_key"
-            android:value="pk_test_51NBLIbJ1TgaWBK1fl72yC7FhY3gdSSEfl9f0Ui0sHHltto7kxMnXaEUrWodU42KlvRfUdJXsgNPiro0I4MxH4xWv00iYBg2lLf"/>
+            android:value="pk_test_51NBLIbJ1TgaWBK1fl72yC7FhY3gdSSEfl9f0Ui0sHHltto7kxMnXaEUrWodU42KlvRfUdJXsgNPiro0I4MxH4xWv00iYBg2lLf" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
     </application>
 
 </manifest>

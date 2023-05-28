@@ -7,6 +7,10 @@
         android:icon="@drawable/baseline_home_24"
         android:id="@+id/home"/>
     <item
+        android:title="Maps"
+        android:icon="@drawable/bar_maps"
+        android:id="@+id/maps"/>
+    <item
         android:title="Favorite"
         android:icon="@drawable/baseline_favorite_24"
         android:id="@+id/favorite"/>
@@ -14,4 +18,6 @@
         android:title="Account"
         android:icon="@drawable/baseline_account_box_24"
         android:id="@+id/account"/>
+
+
 </menu>

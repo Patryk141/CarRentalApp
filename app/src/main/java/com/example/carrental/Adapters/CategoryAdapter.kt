@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.carrental.CategoryInterface
 import com.example.carrental.R
 
 class CategoryAdapter(private var categories: List<String>, private val listener: CategoryInterface) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {

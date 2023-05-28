@@ -53,10 +53,12 @@ class GoogleSignInManager(private val activity: Activity, private val auth: Fire
 
   private fun updateUI(account: GoogleSignInAccount) {
     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+    println(credential)
     auth.signInWithCredential(credential).addOnCompleteListener {
       if(it.isSuccessful) {
         val intent : Intent = Intent(activity, MainActivity::class.java)
-        activity.startActivity(intent)
+        googleSignInLauncher.launch(intent)
+//        activity.startActivity(intent)
       } else {
         Toast.makeText(activity, it.exception.toString(), Toast.LENGTH_SHORT).show()
       }

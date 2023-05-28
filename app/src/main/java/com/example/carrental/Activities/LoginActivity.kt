@@ -8,11 +8,20 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.carrental.*
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 
 class LoginActivity : AppCompatActivity() {
 
@@ -35,6 +44,9 @@ class LoginActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
+    editTextEmail = findViewById(R.id.editTextEmail)
+    editTextPassword = findViewById(R.id.editTextPassword)
+    editTextPasswordRepeat = findViewById(R.id.editTextPasswordRepeat)
 
     var currentUser = FirebaseAuthSingleton.getInstance().currentUser
     val msg = intent.getStringExtra("register")
@@ -54,20 +66,60 @@ class LoginActivity : AppCompatActivity() {
     progressBar = findViewById(R.id.progressBar)
 
     auth = FirebaseAuthSingleton.getInstance()
-    val activityResultRegistry = this@LoginActivity.activityResultRegistry
-
-    googleSignInManager = GoogleSignInManager(this, auth, activityResultRegistry)
-
-    loginWithGoogleBtn.setOnClickListener {
-//      val signInIntent = googleSignInClient.signInIntent
-//      googleSignInLauncher.launch(signInIntent)
-      googleSignInManager.signInWithGoogle()
+//    val activityResultRegistry = this@LoginActivity.activityResultRegistry
+    val googleSignInClient: GoogleSignInClient by lazy { // wartość tworzona w momencie pierwszego odwołania do niej
+      val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken(this.getString(R.string.default_web_client_id))
+        .requestId()
+        .requestEmail()
+        .build()
+      GoogleSignIn.getClient(this, gso)
     }
 
-    editTextEmail = findViewById(R.id.editTextEmail)
-    editTextPassword = findViewById(R.id.editTextPassword)
-    editTextPasswordRepeat = findViewById(R.id.editTextPasswordRepeat)
+//    googleSignInManager = GoogleSignInManager(this, auth, activityResultRegistry)
+    loginWithGoogleBtn.setOnClickListener {
+      val signInIntent = googleSignInClient.signInIntent
+      startActivityForResult(signInIntent, 100)
+//      googleSignInLauncher.launch(signInIntent)
+//      googleSignInManager.signInWithGoogle()
+    }
+
   }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+    if(requestCode == 100) {
+      val signInAccountTask: Task<GoogleSignInAccount> =
+        GoogleSignIn.getSignedInAccountFromIntent(data)
+
+      if (signInAccountTask.isSuccessful) {
+        try {
+          val googleSignInAccount = signInAccountTask.getResult(ApiException::class.java)
+          if(googleSignInAccount != null) {
+            // When sign in account is not equal to null initialize auth credential
+            val authCredential: AuthCredential = GoogleAuthProvider.getCredential(
+              googleSignInAccount.idToken, null
+            )
+            auth.signInWithCredential(authCredential)
+              .addOnCompleteListener {
+                if(it.isSuccessful) {
+                  startActivity(
+                    Intent(this, MainActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                  )
+                  Toast.makeText(this, "Firebase authentication successful", Toast.LENGTH_SHORT).show()
+                } else {
+                  Toast.makeText(this, "Firebase authentication failed: " + it.exception!!.message, Toast.LENGTH_SHORT).show()
+                }
+              }
+          }
+        }
+        catch(e : ApiException) {
+          e.printStackTrace()
+        }
+      }
+    }
+  }
+
 
   private fun validateInputs(email: String, password: String, passwordRepeat: String) : Boolean {
     if(!email.contains("@") || password.length < 4 || passwordRepeat.length < 4) {

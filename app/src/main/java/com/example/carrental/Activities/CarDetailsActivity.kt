@@ -21,8 +21,6 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
-import kotlin.random.Random
 
 class CarDetailsActivity : AppCompatActivity() {
 
@@ -40,14 +38,10 @@ class CarDetailsActivity : AppCompatActivity() {
     carFeatures = findViewById(R.id.carFeaturesRecycler)
     carFeatures.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
     var carFeaturesList : ArrayList<CarFeature> = ArrayList()
-//    list.add(CarFeature("Gearbox", "Automatic"))
-//    list.add(CarFeature("Acceleration", "4.2s 0-100 km/h"))
-//    list.add(CarFeature("Engine Out", "400 HP"))
-//    list.add(CarFeature("Engine In", "200 HP"))
-//    carFeatures.adapter = CarDetailsAdapter(list)
 
     val carID: String? = intent.getStringExtra("ID")
-    imagePath = intent.getStringExtra("imagePath")
+    imagePath = intent.getStringExtra("url")
+    println(imagePath)
     db = Firebase.firestore
     val carFeaturesCollection = db.collection("carsFeatures")
 

@@ -13,12 +13,14 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.cardview.widget.CardView
 import com.bumptech.glide.Glide
 import com.example.carrental.Activities.LoginActivity
+import com.example.carrental.Activities.PaymentsActivity
 import com.example.carrental.FirebaseAuthSingleton
 import com.example.carrental.R
 
 class AccountFragment : Fragment() {
 
     private lateinit var logoutCard : CardView
+    private lateinit var paymentCard : CardView
     companion object {
         private val ARG_VALUE = "user_name"
         private val ARG_EMAIL = "user_email"
@@ -51,12 +53,17 @@ class AccountFragment : Fragment() {
         var nameTxtView = view.findViewById<TextView>(R.id.textView5)
         var imagePhoto = view.findViewById<ImageView>(R.id.imageView)
         logoutCard = view.findViewById(R.id.logoutCard)
+        paymentCard = view.findViewById(R.id.paymentCard)
 
         logoutCard.setOnClickListener {
             FirebaseAuthSingleton.getInstance().signOut()
             val intent = Intent(requireActivity(), LoginActivity::class.java)
             startActivity(intent)
             requireActivity().finish()
+        }
+
+        paymentCard.setOnClickListener {
+            showPayments(requireView())
         }
 
         nameTxtView.text = name
@@ -72,6 +79,12 @@ class AccountFragment : Fragment() {
         val img = AppCompatResources.getDrawable(requireContext(), R.drawable.user_profile)
         imagePhoto.setImageDrawable(img)
         return view
+    }
+
+
+    fun showPayments(view: View) {
+        val intent = Intent(requireContext(), PaymentsActivity::class.java)
+        startActivity(intent)
     }
 
 }

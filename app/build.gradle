@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
     id 'com.google.gms.google-services'
     id 'kotlin-kapt'
 }
@@ -8,6 +9,8 @@ plugins {
 android {
     namespace 'com.example.carrental'
     compileSdk 33
+
+    apply plugin: 'com.android.application'
 
     defaultConfig {
         applicationId "com.example.carrental"
@@ -36,7 +39,7 @@ android {
 }
 
 dependencies {
-
+    apply plugin: 'com.android.application'
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
@@ -76,4 +79,7 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
+
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 }

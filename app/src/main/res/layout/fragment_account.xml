@@ -168,6 +168,9 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/paymentCard"
+                android:clickable="true"
+                android:onClick="showPayments"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_rowWeight="1"
