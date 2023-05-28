@@ -8,8 +8,8 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.carrental.Adapters.PaymentsAdapter
-import com.example.carrental.Car
-import com.example.carrental.CarData
+import com.example.carrental.Data.Car
+import com.example.carrental.Data.CarData
 import com.example.carrental.Data.Payment
 import com.example.carrental.FirebaseAuthSingleton
 import com.example.carrental.R

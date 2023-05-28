@@ -43,8 +43,7 @@ class CarDetailsActivity : TransformationAppCompatActivity() {
     nameCar = findViewById<TextView>(R.id.textView6)
 
     val carID: String? = intent.getStringExtra("ID")
-    imagePath = intent.getStringExtra("url")
-    println(imagePath)
+    imagePath = intent.getStringExtra("imagePath")
     db = Firebase.firestore
     val carFeaturesCollection = db.collection("carsFeatures")
 
@@ -87,9 +86,9 @@ class CarDetailsActivity : TransformationAppCompatActivity() {
 
   private fun handleCarData(imageUrl: String?) {
     Glide.with(this)
-        .load(imageUrl)
-        .override(700, 700)
-        .into(imageView)
+      .load(imageUrl)
+      .override(700, 700)
+      .into(imageView)
   }
 
   fun goToCart(view: View) {

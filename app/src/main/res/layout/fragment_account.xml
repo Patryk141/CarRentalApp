@@ -113,6 +113,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/paymentCard"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_rowWeight="1"

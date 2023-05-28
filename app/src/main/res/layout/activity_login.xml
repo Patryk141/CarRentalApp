@@ -191,7 +191,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textColor="@color/common_google_signin_btn_text_light_default"
             android:text="LOGIN"
             android:fontFamily="sans-serif-condensed"
             android:textStyle="italic"

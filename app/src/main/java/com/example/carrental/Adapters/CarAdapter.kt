@@ -10,14 +10,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.firebase.storage.FirebaseStorage
 import com.skydoves.transformationlayout.TransformationCompat
 import com.skydoves.transformationlayout.TransformationLayout
-import com.example.carrental.Activities.CarDetailsActivity
 import com.example.carrental.Data.CarData
 import com.example.carrental.FavoriteInterface
 import com.example.carrental.R
@@ -31,7 +29,6 @@ class CarAdapter(private var carsList : List<CarData?>, var favoriteCarsListData
         var transformationLayout : TransformationLayout = view.findViewById<TransformationLayout>(R.id.transformationLayout)
         var button : Button = view.findViewById<Button>(R.id.button2)
     }
-//    AIzaSyCBLE-n9vJsG3OMKqjykhGr7GokjGIcL84
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.cell_car, parent, false)
@@ -65,8 +62,6 @@ class CarAdapter(private var carsList : List<CarData?>, var favoriteCarsListData
 
             Glide.with(holder.itemView)
                 .load(imageUrl)
-//            .override(500, 500)
-//            .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.image)
         }
@@ -77,16 +72,6 @@ class CarAdapter(private var carsList : List<CarData?>, var favoriteCarsListData
 
         holder.textViewModel.text = car.brand + " " + car.model
         holder.textViewPrice.text = car.cost.toString() + "$/day"
-
-//        for (element in favoriteCarsListData) {
-//            if (car!!.id == element!!.id) {
-//                Log.e("", "TAK")
-//                isFavorite = true
-//                holder.button.setBackgroundResource(R.drawable.baseline_favorite_24)
-//                break
-//            }
-//        }
-
 
         holder.image.setOnClickListener {
             val intent = Intent(context, com.example.carrental.Activities.CarDetailsActivity::class.java)

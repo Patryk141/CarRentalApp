@@ -1,8 +1,12 @@
 package com.example.carrental.Activities
 
+import android.app.Activity
+import android.app.DownloadManager
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -19,12 +23,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.stripe.android.PaymentConfiguration
+import okhttp3.*
 import com.stripe.android.paymentsheet.PaymentSheet
 import com.stripe.android.paymentsheet.PaymentSheetResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.io.IOException
 
 class CartActivity : AppCompatActivity() {
 
@@ -40,7 +47,8 @@ class CartActivity : AppCompatActivity() {
   private lateinit var paymentSheetLauncher: ActivityResultLauncher<Intent>
 
   companion object {
-    private const val BACKEND_URL = "http://10.0.2.2:4245/payment-sheet"
+//    private const val BACKEND_URL = "http://10.0.2.2:4245/payment-sheet"
+    private const val BACKEND_URL = "http://192.168.0.66:4245/payment-sheet"
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,21 +82,21 @@ class CartActivity : AppCompatActivity() {
       .header("Content-Type", "application/json")
       .body(requestBody)
       .responseJson { _, _, result ->
-      println("No siema siemanko witam")
-      if (result is Result.Success) {
-        val responseJson = result.get().obj()
-        customerConfig = PaymentSheet.CustomerConfiguration(
-          responseJson.getString("customer"),
-          responseJson.getString("ephemeralKey")
-        )
-        paymentIntentClientSecret = responseJson.getString("paymentIntent")
-        val publishableKey = responseJson.getString("publishableKey")
-        PaymentConfiguration.init(this, publishableKey)
+        println("No siema siemanko witam")
+        if (result is Result.Success) {
+          val responseJson = result.get().obj()
+          customerConfig = PaymentSheet.CustomerConfiguration(
+            responseJson.getString("customer"),
+            responseJson.getString("ephemeralKey")
+          )
+          paymentIntentClientSecret = responseJson.getString("paymentIntent")
+          val publishableKey = responseJson.getString("publishableKey")
+          PaymentConfiguration.init(this, publishableKey)
+        }
+        else {
+          println(result)
+        }
       }
-      else {
-        println(result)
-      }
-    }
 
 //    fetchPaymentIntent()
   }
