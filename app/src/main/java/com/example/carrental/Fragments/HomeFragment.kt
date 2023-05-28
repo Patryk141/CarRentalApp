@@ -1,10 +1,9 @@
-package com.example.carrental.Fragments
+package com.example.carrental
 
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,10 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.carrental.Adapters.CarAdapter
 import com.example.carrental.Adapters.CategoryAdapter
-import com.example.carrental.CategoryInterface
 import com.example.carrental.Data.CarData
-import com.example.carrental.FavoriteInterface
-import com.example.carrental.R
 
 class HomeFragment(var carsListData: List<CarData?>, var favoriteCarsListData: List<CarData?>, var listener : FavoriteInterface, var category: String, var searchingText: String) : Fragment(),
     CategoryInterface {

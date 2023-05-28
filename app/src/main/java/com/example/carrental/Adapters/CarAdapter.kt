@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -30,6 +31,7 @@ class CarAdapter(private var carsList : List<CarData?>, var favoriteCarsListData
         var transformationLayout : TransformationLayout = view.findViewById<TransformationLayout>(R.id.transformationLayout)
         var button : Button = view.findViewById<Button>(R.id.button2)
     }
+//    AIzaSyCBLE-n9vJsG3OMKqjykhGr7GokjGIcL84
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.cell_car, parent, false)
@@ -87,7 +89,7 @@ class CarAdapter(private var carsList : List<CarData?>, var favoriteCarsListData
 
 
         holder.image.setOnClickListener {
-            val intent = Intent(context, CarDetailsActivity::class.java)
+            val intent = Intent(context, com.example.carrental.Activities.CarDetailsActivity::class.java)
             intent.putExtra("ID", car?.id)
             intent.putExtra("imagePath", imageUrl)
             TransformationCompat.startActivity(holder.transformationLayout, intent)

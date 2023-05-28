@@ -43,7 +43,8 @@ class CarDetailsActivity : TransformationAppCompatActivity() {
     nameCar = findViewById<TextView>(R.id.textView6)
 
     val carID: String? = intent.getStringExtra("ID")
-    imagePath = intent.getStringExtra("imagePath")
+    imagePath = intent.getStringExtra("url")
+    println(imagePath)
     db = Firebase.firestore
     val carFeaturesCollection = db.collection("carsFeatures")
 

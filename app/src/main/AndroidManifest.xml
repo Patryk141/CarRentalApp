@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.google.android.gms.permission.READ_GSERVICES" />
 
     <application
@@ -20,6 +22,9 @@
             android:exported="false" />
         <activity
             android:name=".Activities.ContactActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.PaymentsActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.CartActivity"
@@ -47,11 +52,11 @@
         </activity>
 
         <meta-data
-            android:name="com.google.android.gms.wallet.api.enabled"
-            android:value="true" />
-        <meta-data
             android:name="com.stripe.publishable_key"
             android:value="pk_test_51NBLIbJ1TgaWBK1fl72yC7FhY3gdSSEfl9f0Ui0sHHltto7kxMnXaEUrWodU42KlvRfUdJXsgNPiro0I4MxH4xWv00iYBg2lLf" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
     </application>
 
 </manifest>

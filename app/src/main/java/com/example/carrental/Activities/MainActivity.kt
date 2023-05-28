@@ -12,8 +12,7 @@ import com.example.carrental.Data.Car
 import com.example.carrental.Data.CarData
 import com.example.carrental.Data.FavoriteCar
 import com.example.carrental.Fragments.AccountFragment
-import com.example.carrental.Fragments.FavoriteFragment
-import com.example.carrental.Fragments.HomeFragment
+import com.example.carrental.Fragments.MapsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -115,6 +114,10 @@ class MainActivity : AppCompatActivity(), FavoriteInterface {
                 }
                 R.id.account -> {
                     replaceFragment(AccountFragment.newInstance(userName, userEmail, photoUrl))
+                    return@setOnItemSelectedListener true
+                }
+                R.id.maps -> {
+                    replaceFragment(MapsFragment())
                     return@setOnItemSelectedListener true
                 }
             }

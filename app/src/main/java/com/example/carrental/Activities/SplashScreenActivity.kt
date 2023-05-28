@@ -7,6 +7,7 @@ import android.view.animation.AnimationUtils
 import android.widget.TextView
 import com.example.carrental.FirebaseAuthSingleton
 import com.example.carrental.R
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -20,7 +21,7 @@ class SplashScreenActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_splash_screen)
-
+    FirebaseAuth.getInstance().signOut()
     val fAuth = FirebaseAuthSingleton.getInstance()
 //    fAuth.signOut()
     appNameTxt = findViewById<TextView>(R.id.appName);
