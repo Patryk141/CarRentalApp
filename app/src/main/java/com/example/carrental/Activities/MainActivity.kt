@@ -8,6 +8,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import com.example.carrental.*
+import com.example.carrental.Data.Car
+import com.example.carrental.Data.CarData
+import com.example.carrental.Data.FavoriteCar
 import com.example.carrental.Fragments.AccountFragment
 import com.example.carrental.Fragments.FavoriteFragment
 import com.example.carrental.Fragments.HomeFragment
@@ -15,7 +18,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -31,6 +33,8 @@ class MainActivity : AppCompatActivity(), FavoriteInterface {
     private var favoriteCarsListData: ArrayList<CarData?> = ArrayList()
     private var favoriteId : String = ""
     private lateinit var favoriteCar:  List<FavoriteCar?>
+    var category = "ALL"
+    var searchingText = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -80,7 +84,7 @@ class MainActivity : AppCompatActivity(), FavoriteInterface {
                                 var carData = documentSnapshot.toObject(CarData::class.java)
                                 carData
                             }
-                            replaceFragment(HomeFragment(carsListData, favoriteCarsListData, listener = this@MainActivity))
+                            replaceFragment(HomeFragment(carsListData, favoriteCarsListData, listener = this@MainActivity, category, searchingText))
                         }
                         .addOnFailureListener { e ->
                             Log.e(TAG, "Error getting cars data: ", e)
@@ -102,11 +106,10 @@ class MainActivity : AppCompatActivity(), FavoriteInterface {
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
-                    replaceFragment(HomeFragment(carsListData, favoriteCarsListData, this))
+                    replaceFragment(HomeFragment(carsListData, favoriteCarsListData, this, category, searchingText))
                     return@setOnItemSelectedListener true
                 }
                 R.id.favorite -> {
-                    Log.e("", favoriteCarsListData.size.toString())
                     replaceFragment(FavoriteFragment(favoriteCarsListData, favoriteCarsListData, this))
                     return@setOnItemSelectedListener true
                 }
@@ -217,7 +220,7 @@ class MainActivity : AppCompatActivity(), FavoriteInterface {
         }
     }
 
-    private fun AppCompatActivity.replaceFragment(fragment:Fragment){
+    private fun AppCompatActivity.replaceFragment(fragment: Fragment){
         val fragmentManager = supportFragmentManager
         val transaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.frameLayout, fragment)
@@ -273,6 +276,14 @@ class MainActivity : AppCompatActivity(), FavoriteInterface {
                 .addOnFailureListener { e ->
                     Log.w(TAG, "Error adding Car", e)
                 }
+        }
+    }
+
+    override fun change(category: String, searchingText: String) {
+        this.category = category
+        this.searchingText = searchingText
+        if (category == "") {
+            this.category = "ALL"
         }
     }
 }

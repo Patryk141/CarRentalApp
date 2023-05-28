@@ -1,6 +1,7 @@
 package com.example.carrental.Fragments
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,9 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.cardview.widget.CardView
 import com.bumptech.glide.Glide
+import com.example.carrental.Activities.ChangePassActivity
+import com.example.carrental.Activities.ContactActivity
 import com.example.carrental.Activities.LoginActivity
 import com.example.carrental.FirebaseAuthSingleton
 import com.example.carrental.R
@@ -34,11 +38,12 @@ class AccountFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_account, container, false)
+
+        view.findViewById<CardView>(R.id.ContactCardView).setOnClickListener { onClickContact(it) }
+        view.findViewById<CardView>(R.id.SettingsCardView).setOnClickListener { onClickSettings(it) }
+
         // Inflate the layout for this fragment
         val name = arguments?.getString(ARG_VALUE)
         val email = arguments?.getString(ARG_EMAIL)
@@ -74,4 +79,13 @@ class AccountFragment : Fragment() {
         return view
     }
 
+    private fun onClickContact(view: View) {
+        val intent = Intent(activity, ContactActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun onClickSettings(view: View) {
+        val intent = Intent(activity, ChangePassActivity::class.java)
+        startActivity(intent)
+    }
 }

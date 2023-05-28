@@ -1,5 +1,6 @@
 package com.example.carrental.Activities
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,7 +9,9 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.carrental.*
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.SignInButton
 import com.google.android.material.textfield.TextInputEditText
@@ -56,7 +59,7 @@ class LoginActivity : AppCompatActivity() {
     auth = FirebaseAuthSingleton.getInstance()
     val activityResultRegistry = this@LoginActivity.activityResultRegistry
 
-    googleSignInManager = GoogleSignInManager(this, auth, activityResultRegistry)
+    googleSignInManager = GoogleSignInManager(this@LoginActivity, auth, activityResultRegistry)
 
     loginWithGoogleBtn.setOnClickListener {
 //      val signInIntent = googleSignInClient.signInIntent
@@ -119,6 +122,4 @@ class LoginActivity : AppCompatActivity() {
     startActivity(intent)
     finish()
   }
-
-
 }

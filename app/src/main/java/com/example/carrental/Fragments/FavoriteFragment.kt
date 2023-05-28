@@ -1,4 +1,4 @@
-package com.example.carrental
+package com.example.carrental.Fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -10,8 +10,10 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.FirebaseFirestore
-import com.skydoves.transformationlayout.onTransformationStartContainer
+import com.example.carrental.Adapters.CarAdapter
+import com.example.carrental.Data.CarData
+import com.example.carrental.FavoriteInterface
+import com.example.carrental.R
 
 class FavoriteFragment(var carsListData : List<CarData?>, var favoriteCarsListData : List<CarData?>, var listener : FavoriteInterface) : Fragment() {
     private lateinit var recyclerViewCar: RecyclerView
@@ -28,7 +30,7 @@ class FavoriteFragment(var carsListData : List<CarData?>, var favoriteCarsListDa
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        onTransformationStartContainer()
+//        onTransformationStartContainer()
         super.onViewCreated(view, savedInstanceState)
         val recyclerViewAdapter = CarAdapter(carsListData, favoriteCarsListData, activity as Context, listener)
         recyclerViewCar.layoutManager = GridLayoutManager(activity, 2)

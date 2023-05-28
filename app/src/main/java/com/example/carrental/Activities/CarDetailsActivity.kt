@@ -2,7 +2,6 @@ package com.example.carrental.Activities
 
 import android.content.ContentValues
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,39 +11,36 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.carrental.Adapters.CarDetailsAdapter
-import com.example.carrental.CarData
 import com.example.carrental.CarFeature
+import com.example.carrental.Data.CarData
 import com.example.carrental.R
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.skydoves.transformationlayout.TransformationAppCompatActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
-import kotlin.random.Random
 
-class CarDetailsActivity : AppCompatActivity() {
+class CarDetailsActivity : TransformationAppCompatActivity() {
 
   private lateinit var db : FirebaseFirestore
   private lateinit var imageView: AppCompatImageView
   private lateinit var carFeatures : RecyclerView
+  private lateinit var nameCar : TextView
   private var imagePath : String? = ""
   private lateinit var car : CarData
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_cardetails)
-    imageView = findViewById<AppCompatImageView>(R.id.appCompatImageView1)
+
+    var carFeaturesList : ArrayList<CarFeature> = ArrayList()
     var carPrice = findViewById<TextView>(R.id.textViewPrice)
+    imageView = findViewById<AppCompatImageView>(R.id.appCompatImageView1)
     carFeatures = findViewById(R.id.carFeaturesRecycler)
     carFeatures.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-    var carFeaturesList : ArrayList<CarFeature> = ArrayList()
-//    list.add(CarFeature("Gearbox", "Automatic"))
-//    list.add(CarFeature("Acceleration", "4.2s 0-100 km/h"))
-//    list.add(CarFeature("Engine Out", "400 HP"))
-//    list.add(CarFeature("Engine In", "200 HP"))
-//    carFeatures.adapter = CarDetailsAdapter(list)
+    nameCar = findViewById<TextView>(R.id.textView6)
 
     val carID: String? = intent.getStringExtra("ID")
     imagePath = intent.getStringExtra("imagePath")
@@ -60,6 +56,7 @@ class CarDetailsActivity : AppCompatActivity() {
             if(documentSnapshot.exists()) {
               car = documentSnapshot.toObject(CarData::class.java)!!
               carPrice.text = car.cost.toString() + "$/day"
+              nameCar.text = car.brand + " " + car.model
               handleCarData(imagePath)
 
               carFeaturesCollection

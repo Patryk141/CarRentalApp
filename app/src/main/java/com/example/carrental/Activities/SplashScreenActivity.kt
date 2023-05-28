@@ -22,7 +22,7 @@ class SplashScreenActivity : AppCompatActivity() {
     setContentView(R.layout.activity_splash_screen)
 
     val fAuth = FirebaseAuthSingleton.getInstance()
-    fAuth.signOut()
+//    fAuth.signOut()
     appNameTxt = findViewById<TextView>(R.id.appName);
 
     CoroutineScope(Dispatchers.Main).launch {// wykonanie kodu na wątku głównym

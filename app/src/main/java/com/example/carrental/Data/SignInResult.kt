@@ -1,4 +1,4 @@
-package com.example.carrental
+package com.example.carrental.Data
 
 data class SignInResult(
   val data: UserData?,

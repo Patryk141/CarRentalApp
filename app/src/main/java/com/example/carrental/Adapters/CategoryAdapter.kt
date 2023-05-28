@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.carrental.CategoryInterface
 import com.example.carrental.R
 
-class CategoryAdapter(private var categories: List<String>, private val listener: CategoryInterface) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+class CategoryAdapter(private var categories: List<String>, private val listener: CategoryInterface, private val clicked: String) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
     private val viewHolder : MutableList<ViewHolder> = ArrayList()
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var textView : TextView = view.findViewById<TextView>(R.id.textView2)
@@ -26,7 +27,7 @@ class CategoryAdapter(private var categories: List<String>, private val listener
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.textView.text = categories[position]
-        if (categories[position] == "ALL") {
+        if (categories[position] == clicked) {
             holder.textView.setTextColor(Color.WHITE)
             holder.textView.setBackgroundResource(R.drawable.category_background2)
         }

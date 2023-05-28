@@ -16,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
 class GoogleSignInManager(private val activity: Activity, private val auth: FirebaseAuth, private val activityResultRegistry: ActivityResultRegistry) {
-
   private val googleSignInClient: GoogleSignInClient by lazy { // wartość tworzona w momencie pierwszego odwołania do niej
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
       .requestIdToken(activity.getString(R.string.default_web_client_id))
@@ -40,7 +39,7 @@ class GoogleSignInManager(private val activity: Activity, private val auth: Fire
     googleSignInLauncher.launch(signInIntent)
   }
 
-  private fun handleResult(task: Task<GoogleSignInAccount>) {
+  fun handleResult(task: Task<GoogleSignInAccount>) {
     if(task.isSuccessful) {
       val account : GoogleSignInAccount? = task.result
       if(account != null) {
