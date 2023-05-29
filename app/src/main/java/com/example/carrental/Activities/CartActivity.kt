@@ -1,12 +1,8 @@
 package com.example.carrental.Activities
 
-import android.app.Activity
-import android.app.DownloadManager
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -41,14 +37,15 @@ class CartActivity : AppCompatActivity() {
   private lateinit var paymentBtn : Button
   private lateinit var db : FirebaseFirestore
   private lateinit var auth: FirebaseAuth
-  lateinit var customerConfig: PaymentSheet.CustomerConfiguration
+  private lateinit var customerConfig: PaymentSheet.CustomerConfiguration
   private lateinit var paymentIntentClientSecret: String
   private lateinit var paymentSheet: PaymentSheet
   private lateinit var paymentSheetLauncher: ActivityResultLauncher<Intent>
+  private var isEnable = false
 
   companion object {
 //    private const val BACKEND_URL = "http://10.0.2.2:4245/payment-sheet"
-    private const val BACKEND_URL = "http://192.168.0.66:4245/payment-sheet"
+    private const val BACKEND_URL = "http://192.168.0.59:4245/payment-sheet"
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +67,8 @@ class CartActivity : AppCompatActivity() {
     carPrice = findViewById(R.id.carPrice)
 
     paymentBtn.setOnClickListener { // payment initialization
-      presentPaymentSheet()
+      if (isEnable)
+        presentPaymentSheet()
     }
     initActivity(model, cost!!.toInt(), imagePath)
 
@@ -92,6 +90,7 @@ class CartActivity : AppCompatActivity() {
           paymentIntentClientSecret = responseJson.getString("paymentIntent")
           val publishableKey = responseJson.getString("publishableKey")
           PaymentConfiguration.init(this, publishableKey)
+          isEnable = true
         }
         else {
           println(result)
