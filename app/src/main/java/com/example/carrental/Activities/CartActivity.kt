@@ -44,8 +44,8 @@ class CartActivity : AppCompatActivity() {
   private var isEnable = false
 
   companion object {
-//    private const val BACKEND_URL = "http://10.0.2.2:4245/payment-sheet"
-    private const val BACKEND_URL = "http://192.168.0.59:4245/payment-sheet"
+    private const val BACKEND_URL = "http://192.168.207.111:4245/payment-sheet"
+//    private const val BACKEND_URL = "http://192.168.0.59:4245/payment-sheet"
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
